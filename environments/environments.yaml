@@ -2,7 +2,7 @@
   deploys:
     version: "latest"
   config:
-    AZURE_LOCATION: "westeurope"
+    AZURE_LOCATION: "centraluseuap"
     AZURE_NAME_PREFIX: "validate-azure"
     WEBAPI_NODE_ENV: "production"
 - name: onprem
