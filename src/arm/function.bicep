@@ -18,6 +18,7 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   }
 }
 
+
 resource function 'Microsoft.Web/sites@2020-06-01' = {
   name: function_name
   location: location

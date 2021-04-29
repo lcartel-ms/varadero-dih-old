@@ -1,0 +1,20 @@
+{
+    "Location": "Central US EUAP",
+    "Kind": "null",
+    "Tags": {},
+    "Plan": null,
+    "Properties": {
+        "ExtendedLocation":{
+            "CustomLocation": "/subscriptions/2f291b88-9ebf-4d90-836f-ae532edaa1b0/resourcegroups/lc-lima-rg/providers/microsoft.extendedlocation/customlocations/lc-location"
+        },
+        "StaticIp": "20.45.225.214",
+        "AksClusterResourceGroup":"lc-aks-cluster-rg",
+        "ArcConfiguration":{
+            "ArtifactsStorageType" : "NetworkFileSystem",
+            "ArtifactStorageClassName": "default",
+            "FrontEndServiceConfiguration": {
+                "Kind": "LoadBalancer"
+            }
+        }
+    }
+}

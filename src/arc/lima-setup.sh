@@ -72,10 +72,13 @@ printf "${GREEN}Creating AKS cluster resource group: ${aksClusterGroupName} ${NC
 az group create -n $aksClusterGroupName -l "Central US EUAP" --tags prefix=$prefix
 read -n1 -s -r -p $'Press space to continue...\n' key
 
+
+##Block at this point
+
 printf "${GREEN}Checking if AKS cluster: ${aksClusterName} already exists...${NC}\n"
 
 if
-    [[ $(az aks show -g $aksClusterGroupName -n $aksClusterName | jq -r .name) == "${aksClusterName}" ]]
+    [[ $(az aks show -g $aksClusterGroupName -n $aksClusterName -o json | jq -r .name) == "${aksClusterName}" ]]
 then
     echo "Cluster already exists"
 else
@@ -91,7 +94,7 @@ read -n1 -s -r -p $'If you see a list of namespaces above, you are good to conti
 printf "${GREEN}Creating static IP for the cluster ${NC}\n"
 infra_rg=$(az aks show -g $aksClusterGroupName -n $aksClusterName -o tsv --query nodeResourceGroup)
 az network public-ip create -g $infra_rg -n $staticIpName --sku STANDARD
-staticIp=$(az network public-ip show -g $infra_rg -n $staticIpName | jq -r .ipAddress)
+staticIp=$(az network public-ip show -g $infra_rg -n $staticIpName -o json | jq -r .ipAddress)
 printf "${GREEN}Ip address: ${staticIp} ${NC}\n"
 
 printf "${GREEN}Connecting cluster to ARC in RG: ${groupName} ${NC}\n"
@@ -145,7 +148,7 @@ while true
 do
     printf "${GREEN}\nChecking connectivity... ${NC}\n" 
     sleep 10
-    connectivityStatus=$(az connectedk8s show -n $clusterName -g $groupName | jq -r .connectivityStatus)
+    connectivityStatus=$(az connectedk8s show -n $clusterName -g $groupName -o json | jq -r .connectivityStatus)
     printf "${GREEN}connectivityStatus: ${connectivityStatus} ${NC}\n"
     if
         [[ $connectivityStatus == "Connected" ]]
@@ -169,7 +172,7 @@ while true
 do
     printf "${GREEN}\nChecking state of extension... ${NC}\n" 
     sleep 10
-    installState=$(az k8s-extension show --cluster-type connectedClusters -c $clusterName -g $groupName --name $extensionName | jq -r .installState)
+    installState=$(az k8s-extension show --cluster-type connectedClusters -c $clusterName -g $groupName --name $extensionName -o json | jq -r .installState)
     printf "${GREEN}installState: ${installState} ${NC}\n"
     if
         [[ $installState == "Installed" ]]
@@ -188,7 +191,7 @@ while true
 do
     printf "${GREEN}\nChecking state of custom location... ${NC}\n" 
     sleep 10
-    customLocationState=$(az customlocation show -g $groupName -n $customLocationName | jq -r .provisioningState)
+    customLocationState=$(az customlocation show -g $groupName -n $customLocationName -o json | jq -r .provisioningState)
     printf "${GREEN}customLocationState: ${customLocationState} ${NC}\n"
     if
         [[ $customLocationState == "Succeeded" ]]
@@ -230,7 +233,7 @@ while true
 do
     printf "${GREEN}\nChecking state of environment... ${NC}\n" 
     sleep 10
-    kubeenvironmentState=$(az appservice kube show -g $groupName -n $kubeEnvironmentName | jq -r .provisioningState)
+    kubeenvironmentState=$(az appservice kube show -g $groupName -n $kubeEnvironmentName -o json | jq -r .provisioningState)
     printf "${GREEN}kubeenvironmentState: ${kubeenvironmentState} ${NC}\n"
     if
         [[ $kubeenvironmentState == "Succeeded" ]]
@@ -255,5 +258,5 @@ printf "${GREEN}Whooo - congratulations! You made it all the way through - now g
 read -n1 -s -r -p $'Press space to install an nginx app... (ctrl+c to quit)\n' key
 az appservice plan create -g $groupName -n "${prefix}-app-plan" --kube-environment "${kubeEnvironmentName}" --kube-sku ANY
 az webapp create -g $groupName -p "${prefix}-app-plan" -n "${prefix}-nginx" --deployment-container-image-name docker.io/nginx:latest
-nginxhostname=$(az webapp show -g $groupName -n "${prefix}-nginx" | jq -r .defaultHostName)
+nginxhostname=$(az webapp show -g $groupName -n "${prefix}-nginx" -o json | jq -r .defaultHostName)
 printf "${GREEN}Nginx up and running here http://${nginxhostname}... ${NC}\n"

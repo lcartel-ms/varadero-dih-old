@@ -4,7 +4,7 @@ param is_kubeEnvironment bool
 param appSettings_insights_key string
 param webapp_plan string
 
-var storage_name = '${uniqueString(resourceGroup().id)}stor'
+var storage_name = '${uniqueString(resourceGroup().id)}storage'
 var logic_plan_name = '${name_prefix}-funcplan'
 var logic_name = '${name_prefix}-logic-${uniqueString(resourceGroup().id)}'
 
