@@ -4,7 +4,7 @@ param is_kubeEnvironment bool
 param storage string
 param appSettings_insights_key string
 
-var apimName = '${name_prefix}-apim-${uniqueString(resourceGroup().id)}'
+var apimName = '${name_prefix}-apim-${uniqueString(resourceGroup().id)}-2'
 var apim_product_name = 'accessories'
 
 param apiName string = 'webapi'
