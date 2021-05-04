@@ -3,13 +3,13 @@
     version: "latest"
   config:
     AZURE_LOCATION: "westeurope"
-    AZURE_NAME_PREFIX: "validate-azure"
+    AZURE_NAME_PREFIX: "k8s-azure"
     WEBAPI_NODE_ENV: "production"
 - name: onprem
   deploys:
     version: "v0.0.1-latest"
   config:
     AZURE_LOCATION: "centraluseuap"
-    AZURE_NAME_PREFIX: "validate-arc-2"
+    AZURE_NAME_PREFIX: "k8s-arc-2"
     WEBAPI_NODE_ENV: "production"
     APP_SERVICE_KUBERNETES_ENVIRONMENT_ID: "/subscriptions/2f291b88-9ebf-4d90-836f-ae532edaa1b0/resourceGroups/k8s-lima-rg/providers/Microsoft.Web/kubeEnvironments/k8s-kube"
